@@ -7,7 +7,7 @@ class ContactsController < ApplicationController
 		if @contact.valid?
 			Rails.logger.debug 'DEBUG: mail' + Rails.application.secrets.email_provider_username
 			@contact.update_spreadsheet
-			# TODO send message
+			UserMailer.contact_email(@contact).deliver
 			flash[:notice] = "Message sent from #{@contact.name}."
 			redirect_to root_path
 		else
