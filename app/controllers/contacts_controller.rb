@@ -1,13 +1,12 @@
 class ContactsController < ApplicationController
-	
 	def new
 		@contact = Contact.new
 	end
-	
 	def create
 		@contact = Contact.new(secure_params)
 		if @contact.valid?
-			# TODO save data
+			Rails.logger.debug 'DEBUG: mail' + Rails.application.secrets.email_provider_username
+			@contact.update_spreadsheet
 			# TODO send message
 			flash[:notice] = "Message sent from #{@contact.name}."
 			redirect_to root_path
@@ -15,11 +14,8 @@ class ContactsController < ApplicationController
 			render :new
 		end
 	end
-	
 	private
-	
 		def secure_params
 			params.require(:contact).permit(:name, :email, :content)
 		end
-		
 end
